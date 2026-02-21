@@ -1,41 +1,46 @@
 {
   "expo": {
     "name": "LifeAdminPro",
-    "slug": "LifeAdminPro",
+    "slug": "live-admin",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/image/app-logo.png",
     "scheme": "lifeadminpro",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sreekanthdevsorganization.liveadmin",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/image/app-logo.png",
+        "backgroundImage": "./assets/image/app-logo.png",
+        "monochromeImage": "./assets/image/app-logo.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.sreekanthdevsorganization.liveadmin"
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/image/app-logo.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/image/app-logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#F7F8FA",
           "dark": {
-            "backgroundColor": "#000000"
+            "backgroundColor": "#09090B"
           }
         }
       ],
@@ -44,7 +49,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/images/icon.png"
+          "icon": "./assets/image/app-logo.png"
         }
       ],
       "@react-native-community/datetimepicker"
@@ -52,6 +57,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c1d72e00-1807-47f1-9161-d001cba8cade"
+      }
+    },
+    "owner": "sreekanth-devs-organization"
   }
 }

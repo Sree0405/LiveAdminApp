@@ -1,9 +1,9 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { useColorScheme, AppState as RNAppState } from 'react-native';
-import { getTheme, setTheme as dbSetTheme } from '../database/settings';
-import { getLockEnabled } from '../database/settings';
+import { AppState as RNAppState, useColorScheme } from 'react-native';
+import { setTheme as dbSetTheme, getLockEnabled, getTheme } from '../database/settings';
+import { prefetchLogo } from '../services/logoCaching';
 import type { Theme } from '../theme/theme';
-import { lightTheme, darkTheme } from '../theme/theme';
+import { darkTheme, lightTheme } from '../theme/theme';
 
 type ThemePreference = 'light' | 'dark' | 'system';
 
@@ -61,6 +61,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const setThemePreference = useCallback(async (p: ThemePreference) => {
     await dbSetTheme(p);
     setThemePreferenceState(p);
+  }, []);
+
+  useEffect(() => {
+    // Prefetch logo for better performance
+    prefetchLogo().catch(() => {
+      // Silently fail - logo prefetch shouldn't block app startup
+    });
   }, []);
 
   useEffect(() => {

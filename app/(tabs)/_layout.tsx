@@ -1,8 +1,10 @@
+import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { useApp } from '~/context/AppContext';
+import { StyleSheet, View } from 'react-native';
 import { AnimatedTabBar } from '~/components/AnimatedTabBar';
-import { IconSymbol } from '@/components/ui/icon-symbol';
+import { BrandLogo } from '~/components/BrandLogo';
+import { useApp } from '~/context/AppContext';
 
 const TAB_ICONS: Record<string, 'square.grid.2x2.fill' | 'folder.fill' | 'plus.circle.fill' | 'doc.text.fill' | 'chart.bar.fill' | 'gearshape.fill'> = {
   index: 'square.grid.2x2.fill',
@@ -17,6 +19,15 @@ function TabIcon({ name, color, size = 24 }: { name: string; color: string; size
   return <IconSymbol size={size} name={TAB_ICONS[name] ?? 'circle'} color={color} />;
 }
 
+function HeaderLogoLeft() {
+  const { theme } = useApp();
+  return (
+    <View style={[styles.headerLogo, { marginLeft: 16 }]}>
+      <BrandLogo size="small" prefetch={false} />
+    </View>
+  );
+}
+
 export default function TabLayout() {
   const { theme } = useApp();
 
@@ -26,7 +37,12 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: theme.accent,
         tabBarInactiveTintColor: theme.textSecondary,
-        headerShown: false,
+        headerShown: true,
+        headerTitleStyle: { fontSize: 18, fontWeight: '700' },
+        headerStyle: { backgroundColor: theme.surface, borderBottomColor: theme.border, borderBottomWidth: 1 },
+        headerTintColor: theme.text,
+        headerTitleAlign: 'center',
+        headerLeft: () => <HeaderLogoLeft />,
         tabBarStyle: { backgroundColor: theme.surface, borderTopColor: theme.border },
         tabBarLabelStyle: { fontSize: 11 },
         tabBarIconStyle: { marginBottom: 0 },
@@ -77,3 +93,9 @@ export default function TabLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  headerLogo: {
+    paddingRight: 8,
+  },
+});

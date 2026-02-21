@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, StyleSheet, Switch, Alert, Modal, TextInput } from 'react-native';
+import { Alert, Modal, ScrollView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useApp } from '~/context/AppContext';
+import { BrandLogo } from '~/components/BrandLogo';
 import { GlassCard } from '~/components/ui/GlassCard';
-import { SectionHeader } from '~/components/ui/SectionHeader';
 import { PrimaryButton } from '~/components/ui/PrimaryButton';
-import { getLockEnabled, setLockEnabled } from '~/database/settings';
-import { hasPin, setPin, clearPin } from '~/services/security';
-import { setTheme } from '~/database/settings';
-import { exportRecordsToPdf, sharePdf } from '~/services/pdfExport';
-import { getAllRecords } from '~/database/records';
+import { SectionHeader } from '~/components/ui/SectionHeader';
+import { useApp } from '~/context/AppContext';
 import { getAllExpenses } from '~/database/expenses';
+import { getAllRecords } from '~/database/records';
+import { getLockEnabled, setLockEnabled, setTheme } from '~/database/settings';
+import { exportRecordsToPdf, sharePdf } from '~/services/pdfExport';
 import { requestPermissions, rescheduleAllReminders } from '~/services/reminders';
+import { clearPin, hasPin, setPin } from '~/services/security';
+
+const APP_VERSION = '1.0.0';
+const APP_NAME = 'LifeAdmin Pro';
+const APP_TAGLINE = 'Manage your life seamlessly';
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
@@ -136,6 +140,26 @@ export default function SettingsScreen() {
         <PrimaryButton title={exporting ? 'Exporting…' : 'Export to PDF'} variant="outline" onPress={onExportPdf} disabled={exporting} fullWidth />
       </GlassCard>
 
+      <SectionHeader title="About" />
+      <GlassCard variant="gradient" style={styles.aboutCard}>
+        <View style={styles.aboutContent}>
+          <BrandLogo
+            size="large"
+            accessibilityLabel="LifeAdminPro Logo"
+            prefetch
+          />
+          <Text style={[styles.aboutAppName, { color: theme.text }]}>
+            {APP_NAME}
+          </Text>
+          <Text style={[styles.aboutVersion, { color: theme.textSecondary }]}>
+            Version {APP_VERSION}
+          </Text>
+          <Text style={[styles.aboutTagline, { color: theme.textTertiary }]}>
+            {APP_TAGLINE}
+          </Text>
+        </View>
+      </GlassCard>
+
       <Modal visible={showPinInput} transparent animationType="fade">
         <View style={[styles.modalOverlay, { backgroundColor: 'rgba(0,0,0,0.5)' }]}>
           <View style={[styles.pinCard, { backgroundColor: theme.surface }]}>
@@ -172,6 +196,11 @@ const styles = StyleSheet.create({
   switchRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 4 },
   switchLabel: { fontSize: 17 },
   mb: { marginBottom: 12 },
+  aboutCard: { marginBottom: 20 },
+  aboutContent: { alignItems: 'center', paddingVertical: 12 },
+  aboutAppName: { fontSize: 24, fontWeight: '700', marginTop: 20, textAlign: 'center' },
+  aboutVersion: { fontSize: 14, marginTop: 8, textAlign: 'center' },
+  aboutTagline: { fontSize: 15, marginTop: 12, textAlign: 'center', lineHeight: 22, paddingHorizontal: 8 },
   modalOverlay: { flex: 1, justifyContent: 'center', padding: 24 },
   pinCard: { padding: 24, borderRadius: 20 },
   pinTitle: { fontSize: 20, fontWeight: '700', marginBottom: 16 },

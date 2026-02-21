@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { Animated, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput } from 'react-native';
+import { BrandLogo } from '~/components/BrandLogo';
 import { PrimaryButton } from '~/components/ui/PrimaryButton';
 import { useApp } from '~/context/AppContext';
 import * as security from '~/services/security';
@@ -9,6 +10,23 @@ export function LockScreen({ onUnlock }: { onUnlock: () => void }) {
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
   const triedBiometrics = React.useRef(false);
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const scaleAnim = React.useRef(new Animated.Value(0.8)).current;
+
+  React.useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        speed: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [fadeAnim, scaleAnim]);
 
   const tryBiometrics = useCallback(async () => {
     const ok = await security.authenticateWithBiometrics('Unlock LifeAdmin Pro');
@@ -42,6 +60,22 @@ export function LockScreen({ onUnlock }: { onUnlock: () => void }) {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={[styles.container, { backgroundColor: theme.background }]}
     >
+      <Animated.View
+        style={[
+          styles.logoContainer,
+          {
+            opacity: fadeAnim,
+            transform: [{ scale: scaleAnim }],
+          },
+        ]}
+      >
+        <BrandLogo
+          size="hero"
+          accessibilityLabel="LifeAdminPro Logo"
+          prefetch
+        />
+      </Animated.View>
+
       <Text style={[styles.title, { color: theme.text }]}>LifeAdmin Pro</Text>
       <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Enter PIN to unlock</Text>
       <TextInput
@@ -70,6 +104,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 32,
+  },
+  logoContainer: {
+    marginBottom: 32,
   },
   title: { fontSize: 32, fontWeight: '700', marginBottom: 8, letterSpacing: -0.5 },
   subtitle: { fontSize: 17, marginBottom: 28 },
